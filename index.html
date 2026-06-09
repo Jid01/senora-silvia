@@ -288,42 +288,98 @@
 
     .qty-selector {
       display: flex;
-      gap: 0.85rem;
-      margin-bottom: 2rem;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
     }
 
     .qty-btn {
       flex: 1;
-      padding: 0.9rem 0.5rem;
+      padding: 0.85rem 0.4rem;
       border-radius: 14px;
       border: 2px solid rgba(255,255,255,0.2);
       background: rgba(255,255,255,0.08);
-      color: white;
+      color: rgba(255,255,255,0.5);
       cursor: pointer;
       text-align: center;
       transition: all 0.2s;
       font-family: 'DM Sans', sans-serif;
     }
-    .qty-btn:hover, .qty-btn.active {
+    .qty-btn:hover {
+      border-color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.8);
+    }
+    .qty-btn.active {
       border-color: white;
-      background: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.2);
+      color: white;
     }
     .qty-btn .qty-num {
       font-family: 'Playfair Display', serif;
-      font-size: 1.9rem;
+      font-size: 1.7rem;
       font-weight: 700;
       display: block;
+      line-height: 1;
     }
     .qty-btn .qty-label {
-      font-size: 0.7rem;
-      opacity: 0.55;
-      margin-top: 0.15rem;
+      font-size: 0.68rem;
+      margin-top: 0.3rem;
+      font-weight: 500;
     }
-    .qty-btn .qty-price {
-      font-size: 0.82rem;
-      color: #a8d9b8;
-      margin-top: 0.2rem;
-      font-weight: 600;
+
+    .qty-total {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      min-height: 2rem;
+    }
+    .qty-total span {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+    }
+    .qty-total small {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+      margin-left: 0.4rem;
+    }
+
+    .qty-libre {
+      display: none;
+      margin-bottom: 1.25rem;
+    }
+    .qty-libre input {
+      width: 100%;
+      background: rgba(255,255,255,0.12);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      outline: none;
+      text-align: center;
+    }
+    .qty-libre input::placeholder { color: rgba(255,255,255,0.35); }
+    .qty-libre input:focus { border-color: white; }
+
+    .comercios-btn {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.9rem;
+      background: transparent;
+      color: rgba(255,255,255,0.6);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .comercios-btn:hover {
+      border-color: rgba(255,255,255,0.6);
+      color: white;
     }
 
     .form-group { margin-bottom: 1.1rem; }
@@ -479,19 +535,24 @@
     <div class="qty-selector">
       <div class="qty-btn active" onclick="selectQty(this,1)">
         <span class="qty-num">1</span>
-        <div class="qty-label">unidad</div>
-        <div class="qty-price">$5.00</div>
+        <div class="qty-label">Guiso</div>
       </div>
       <div class="qty-btn" onclick="selectQty(this,2)">
         <span class="qty-num">2</span>
-        <div class="qty-label">unidades</div>
-        <div class="qty-price">$10.00</div>
+        <div class="qty-label">Guisos</div>
       </div>
-      <div class="qty-btn" onclick="selectQty(this,3)">
-        <span class="qty-num">3</span>
-        <div class="qty-label">unidades</div>
-        <div class="qty-price">$15.00</div>
+      <div class="qty-btn" onclick="selectQty(this,'libre')">
+        <span class="qty-num">3+</span>
+        <div class="qty-label">Guisos</div>
       </div>
+    </div>
+
+    <div class="qty-libre" id="qtyLibre">
+      <input type="number" id="cantidadLibre" min="3" placeholder="¿Cuántos guisos? (mín. 3)" oninput="actualizarTotal()" />
+    </div>
+
+    <div class="qty-total" id="qtyTotal">
+      <span>$5.00</span><small>· 1 guiso</small>
     </div>
 
     <div id="orderForm">
@@ -526,16 +587,7 @@
       </div>
       <button class="submit-btn" onclick="enviarPedido()">Confirmar pedido →</button>
       <p class="delivery-note">🛵 Delivery gratis en tu primera compra · Área metropolitana de Panamá</p>
-    </div>
-
-    <div class="success-msg" id="successMsg">
-      <div class="check">✅</div>
-      <h3>¡Pedido recibido!</h3>
-      <p>Gracias — te contactamos por WhatsApp en menos de 24 horas para coordinar tu entrega.</p>
-      <a class="wa-btn" id="waLink" href="#" target="_blank">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.119.554 4.107 1.523 5.83L0 24l6.335-1.502C8.05 23.447 9.994 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.85 0-3.604-.5-5.12-1.38l-.368-.215-3.76.892.948-3.655-.24-.376C2.52 15.726 2 13.93 2 12 2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-        Escribir por WhatsApp
-      </a>
+      <button class="comercios-btn" onclick="abrirComercios()">🏪 Comercios — Pedidos recurrentes</button>
     </div>
   </div>
 </section>
@@ -548,10 +600,36 @@
 
 <script>
   let selectedQty = 1;
+  const tuNumero = '50767477784';
+
   function selectQty(el, qty) {
     document.querySelectorAll('.qty-btn').forEach(b => b.classList.remove('active'));
     el.classList.add('active');
     selectedQty = qty;
+    const libreDiv = document.getElementById('qtyLibre');
+    if (qty === 'libre') {
+      libreDiv.style.display = 'block';
+      document.getElementById('cantidadLibre').value = '';
+      actualizarTotal();
+    } else {
+      libreDiv.style.display = 'none';
+      actualizarTotal();
+    }
+  }
+
+  function actualizarTotal() {
+    const totalDiv = document.getElementById('qtyTotal');
+    if (selectedQty === 'libre') {
+      const cant = parseInt(document.getElementById('cantidadLibre').value) || 0;
+      if (cant >= 3) {
+        totalDiv.innerHTML = `<span>$${(cant * 5).toFixed(2)}</span><small>· ${cant} guisos</small>`;
+      } else {
+        totalDiv.innerHTML = `<span style="opacity:0.4">—</span>`;
+      }
+    } else {
+      const label = selectedQty === 1 ? '1 guiso' : `${selectedQty} guisos`;
+      totalDiv.innerHTML = `<span>$${(selectedQty * 5).toFixed(2)}</span><small>· ${label}</small>`;
+    }
   }
 
   function enviarPedido() {
@@ -563,25 +641,37 @@
       alert('Por favor completa los campos obligatorios: nombre, WhatsApp, dirección y método de pago.');
       return;
     }
+    let cantidad = selectedQty;
+    if (selectedQty === 'libre') {
+      cantidad = parseInt(document.getElementById('cantidadLibre').value);
+      if (!cantidad || cantidad < 3) {
+        alert('Por favor indica una cantidad de 3 o más guisos.');
+        return;
+      }
+    }
     const email = document.getElementById('email').value.trim();
     const nota  = document.getElementById('nota').value.trim();
-    const total = (selectedQty * 5).toFixed(2);
+    const total = (cantidad * 5).toFixed(2);
     const msg = encodeURIComponent(
       `🌶️ *Nuevo pedido — Sra Silvia*\n\n` +
       `*Nombre:* ${nombre}\n` +
       `*WhatsApp:* ${whatsapp}\n` +
       `*Email:* ${email || '—'}\n` +
-      `*Cantidad:* ${selectedQty} unidad(es) · $${total}\n` +
+      `*Cantidad:* ${cantidad} guiso(s) · $${total}\n` +
       `*Dirección:* ${direccion}\n` +
       `*Pago:* ${pago}\n` +
       `*Nota:* ${nota || '—'}\n\n` +
       `📎 _Por favor envía el comprobante de pago por este mismo chat para confirmar tu entrega._`
     );
-    const tuNumero = '50767477784';
-    document.getElementById('waLink').href = `https://wa.me/${tuNumero}?text=${msg}`;
-    document.getElementById('orderForm').style.display = 'none';
-    document.getElementById('successMsg').style.display = 'block';
-    document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    window.open(`https://wa.me/${tuNumero}?text=${msg}`, '_blank');
+  }
+
+  function abrirComercios() {
+    const msg = encodeURIComponent(
+      `🏪 *Consulta de Comercio — Sra Silvia*\n\n` +
+      `Hola, me interesa más información para afiliar mi negocio a pedidos recurrentes de Sra Silvia.`
+    );
+    window.open(`https://wa.me/${tuNumero}?text=${msg}`, '_blank');
   }
 </script>
 </body>
